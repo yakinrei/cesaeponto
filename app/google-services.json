@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "727218958344",
+    "project_id": "cesae-ponto",
+    "storage_bucket": "cesae-ponto.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727218958344:android:f203efc2fed95c08cb21bd",
+        "android_client_info": {
+          "package_name": "com.example.relogiodeponto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJPiwV41CQYHu7Xa7HrfQYSgRUUwhkfB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
