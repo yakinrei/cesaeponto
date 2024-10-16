@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MinimalTheme" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Defina explicitamente atributos para evitar a tela de splash padrão -->
+    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Personalizações do tema aqui -->
+    </style>
+    <style name="AppTheme.Splash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/logo</item> <!-- Ou color -->
+    </style>
+</resources>

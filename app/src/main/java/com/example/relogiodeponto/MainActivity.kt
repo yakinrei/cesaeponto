@@ -5,31 +5,33 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.relogiodeponto.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize Firebase Database
+        // Inicializa o Firebase Database e FirebaseAuth
         database = FirebaseDatabase.getInstance()
-
-        // Connect to the database as soon as the activity starts
-        lifecycleScope.launch {
-            connectToDatabase()
-        }
+        auth = FirebaseAuth.getInstance()
 
         // Button event listeners
         binding.loginButton.setOnClickListener {
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             val password = binding.passwordInput.text.toString()
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 lifecycleScope.launch {
-                    loginUsuario(username, password)
+                    realizarLogin(username, password)
                 }
             } else {
                 showToast("Preencha todos os campos.")
@@ -59,102 +61,106 @@ class MainActivity : AppCompatActivity() {
     private suspend fun connectToDatabase() {
         val connectionResult = withContext(Dispatchers.IO) {
             try {
-                // Check if the database is connected
-                database.getReference(".info/connected").addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.value == true) {
-                            showToast("Conectado ao banco de dados com sucesso!")
-                        } else {
-                            showToast("Erro ao conectar ao banco de dados.")
+                suspendCancellableCoroutine<Boolean> { continuation ->
+                    database.getReference(".info/connected").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            continuation.resume(snapshot.value == true) // Retorna o estado da conexão
                         }
-                    }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        showToast("Erro ao conectar ao banco de dados: ${error.message}")
-                    }
-                })
-                true // Connection successful
+                        override fun onCancelled(error: DatabaseError) {
+                            showToast("Erro ao conectar ao banco de dados: ${error.message}")
+                            continuation.resumeWithException(Exception("Erro ao conectar ao banco de dados: ${error.message}"))
+                        }
+                    })
+                }
             } catch (e: Exception) {
-                e.printStackTrace()
                 showToast("Erro ao conectar ao banco de dados: ${e.message}")
-                false
+                e.printStackTrace()
+                throw Exception("Erro ao conectar ao banco de dados: ${e.message}")
             }
         }
 
-        withContext(Dispatchers.Main) {
-            if (connectionResult) {
-                showToast("Conectado ao banco de dados com sucesso!")
-            } else {
-                showToast("Erro ao conectar ao banco de dados.")
+        // Exibe a mensagem após obter o resultado da conexão
+        showToast(if (connectionResult) "Conectado ao banco de dados com sucesso!" else "Erro ao conectar ao banco de dados.")
+    }
+
+    private suspend fun realizarLogin(email: String, password: String) {
+        return withContext(Dispatchers.IO) {
+            try {
+                // Verifica se o usuário existe no Realtime Database
+                val resultadoLogin = loginUsuario(email, password)
+
+                // Mova a exibição do Toast para a thread principal
+                withContext(Dispatchers.Main) {
+                    showToast(resultadoLogin) // Exibir resultados do login
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showToast("Erro ao realizar login: ${e.message}")
+                }
             }
         }
     }
 
-    // Function to handle user login
-    private suspend fun loginUsuario(email: String, password: String) {
-        val usersRef = database.getReference("users")
-
-        withContext(Dispatchers.IO) {
-            usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+ //Essa Funciona
+    private suspend fun loginUsuario(email: String, password: String): String {
+        val usersRef = database.getReference("Usuarios")
+        return suspendCoroutine { continuation ->
+            usersRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.hasChild(email)) {
-                        val user = snapshot.child(email).getValue(User::class.java)
-                        if (user != null && user.password == password) {
-                            withContext(Dispatchers.Main) {
-                                showToast("Login realizado com sucesso! Tipo: ${user.type}")
-                            }
+                    if (snapshot.exists()) {
+                        val user = snapshot.children.first().getValue(Usuario::class.java)
+                        // Verifica a senha do usuário
+                        if (user != null && user.senha == password) {
+                            continuation.resume("Login realizado com sucesso! Tipo: ${user.cargoId}")
                         } else {
-                            withContext(Dispatchers.Main) {
-                                showToast("Usuário ou senha incorretos.")
-                            }
+                            continuation.resume("Usuário ou senha incorretos.")
                         }
                     } else {
-                        withContext(Dispatchers.Main) {
-                            showToast("Usuário não encontrado.")
-                        }
+                        continuation.resume("Usuário não encontrado.")
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    withContext(Dispatchers.Main) {
-                        showToast("Erro ao verificar usuário: ${error.message}")
-                    }
+                    continuation.resume("Erro ao acessar o banco de dados: ${error.message}")
                 }
             })
         }
     }
 
-    // Function to recover the user password
-    private suspend fun recuperarSenha(email: String) {
-        val usersRef = database.getReference("users")
 
-        withContext(Dispatchers.IO) {
-            usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun recuperarSenha(email: String) {
+        lifecycleScope.launch {
+            val resultado = recuperarSenhaUsuario(email)
+            showToast(resultado)
+        }
+    }
+
+    private suspend fun recuperarSenhaUsuario(email: String): String {
+        val usersRef = database.getReference("Usuarios")
+        return suspendCoroutine { continuation ->
+            usersRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.hasChild(email)) {
-                        val user = snapshot.child(email).getValue(User::class.java)
+                    if (snapshot.exists()) {
+                        val user = snapshot.children.first().getValue(Usuario::class.java)
                         if (user != null) {
-                            withContext(Dispatchers.Main) {
-                                showToast("Sua senha é: ${user.password}")
-                            }
+                            continuation.resume("Sua senha é: ${user.senha}")
                         } else {
-                            withContext(Dispatchers.Main) {
-                                showToast("Erro ao recuperar a senha. Tente novamente.")
-                            }
+                            continuation.resume("Erro ao recuperar a senha. Tente novamente.")
                         }
                     } else {
-                        withContext(Dispatchers.Main) {
-                            showToast("Email não encontrado.")
-                        }
+                        continuation.resume("Email não encontrado.")
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    withContext(Dispatchers.Main) {
-                        showToast("Erro ao recuperar a senha: ${error.message}")
-                    }
+                    continuation.resume("Erro ao recuperar a senha: ${error.message}")
                 }
             })
         }
+    }
+
+    private fun showToast(message: String) {
+       Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
     }
 }

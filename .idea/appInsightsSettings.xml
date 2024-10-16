@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.relogiodeponto" />
+                  <option name="mobileSdkAppId" value="1:727218958344:android:f203efc2fed95c08cb21bd" />
+                  <option name="projectId" value="cesae-ponto" />
+                  <option name="projectNumber" value="727218958344" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
