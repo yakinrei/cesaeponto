@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.RelogiodePonto"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ProfessorActivity"
+            android:exported="false" />
         <activity
             android:name=".SlashinyoufaceActivity"
             android:exported="true">
