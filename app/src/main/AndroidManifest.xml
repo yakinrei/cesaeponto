@@ -6,12 +6,18 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/cesaelogo"
+        android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.RelogiodePonto"
         tools:targetApi="31">
+        <activity
+            android:name=".MainActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".formadorActivity"
+            android:exported="false" />
         <activity
             android:name=".EsqueciamerdadaminhasenhaActivity"
             android:exported="false" />
