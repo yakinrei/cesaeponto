@@ -32,7 +32,7 @@ class EmailService(private val apiKey: String) {
 
     companion object {
         // Cria uma instância de EmailService usando uma chave de API fixa
-        private val emailService = EmailService("")
+        private val emailService = EmailService("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")
 
         fun enviarEmail(destinatario: String, assunto: String, mensagem: String) {
             emailService.enviarEmail(destinatario, assunto, mensagem)
@@ -46,7 +46,7 @@ class EmailService(private val apiKey: String) {
 
 
 fun main() {
-    val sendGridApiKey = ""  // Substitua pela sua chave de API
+    val sendGridApiKey = "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"  // Substitua pela sua chave de API
     val emailService = EmailService(sendGridApiKey)
     emailService.enviarEmail(
         "destinatario@example.com",
