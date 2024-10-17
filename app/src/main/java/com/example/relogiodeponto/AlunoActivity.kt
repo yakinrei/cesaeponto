@@ -5,16 +5,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.relogiodeponto.databinding.ActivityAlunoBinding
+import com.example.relogiodeponto.databinding.ActivityProfessorBinding
 
 class AlunoActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityAlunoBinding
+    private lateinit var usuario: Usuario
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_aluno)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding = ActivityAlunoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        usuario = intent.getSerializableExtra("Usuario") as Usuario
+        binding.textView3.text = "Olá, ${usuario.nome}!"
     }
+
 }

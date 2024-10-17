@@ -7,4 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".AlunoActivity">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="334dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
