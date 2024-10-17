@@ -1,6 +1,6 @@
 package com.example.relogiodeponto
 
-class Administrador(val funcionario: Funcionario, val polo: String) {
+class Administrador(val funcionario: Usuario, val polo: String) {
 
 
 }
