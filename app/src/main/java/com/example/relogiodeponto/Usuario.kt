@@ -7,7 +7,5 @@ data class Usuario(
     val cargoId: Int = 0,
     val email: String = "",
     val nome: String = "",
-    val senha: String = "",
-    val contato: String = "",
-    val sms: Boolean = false
+    val senha: String = ""
 ) : Serializable

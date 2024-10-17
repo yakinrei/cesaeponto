@@ -8,20 +8,26 @@ import kotlin.random.Random
 import android.os.CountDownTimer
 import android.widget.Toast
 import com.example.relogiodeponto.databinding.ActivityEsqueciamerdadaminhasenhaBinding
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import java.io.Serializable
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class EsqueciamerdadaminhasenhaActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEsqueciamerdadaminhasenhaBinding
-    private lateinit var usuario: Usuario
     private lateinit var codigoEnviado: String
+    private lateinit var usuario: Usuario
     private var podeReenviarCodigo = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityEsqueciamerdadaminhasenhaBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Recebe o objeto Usuario que foi passado pela Intent
-        usuario = intent.getSerializableExtra("usuario") as Usuario
+        usuario = intent.getSerializableExtra("Usuario") as Usuario
 
         // Exibe o e-mail do usuário
         binding.emailTextView.text = "Email: ${usuario.email}"
@@ -51,7 +57,7 @@ class EsqueciamerdadaminhasenhaActivity : AppCompatActivity() {
         }
 
         retornar.setOnClickListener {
-            redirecionarPorCargo(4)
+            redirecionarPorCargo(null)
         }
 
         // Lógica para alterar a senha
@@ -86,7 +92,7 @@ class EsqueciamerdadaminhasenhaActivity : AppCompatActivity() {
             usersRef.child(usuario.email).child("senha").setValue(novaSenha).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     showToast("Senha alterada com sucesso!")
-                    redirecionarPorCargo(usuario.cargoId)
+                    redirecionarPorCargo(usuario)
                 } else {
                     showToast("Erro ao alterar a senha. Tente novamente.")
                 }
@@ -94,13 +100,14 @@ class EsqueciamerdadaminhasenhaActivity : AppCompatActivity() {
         }
 
         // Função para redirecionar de acordo com o cargo do usuário
-        private fun redirecionarPorCargo(cargoId: Int) {
-            val intent = when (cargoId) {
+        private fun redirecionarPorCargo(user: Usuario?) {
+            val intent = when (user?.cargoId) {
                 1 -> Intent(this, AdministradorActivity::class.java)
                 2 -> Intent(this, ProfessorActivity::class.java)
                 3 -> Intent(this, AlunoActivity::class.java)
                 else -> Intent(this, MainActivity::class.java) // Caso algo dê errado
             }
+            intent.putExtra("Usuario", user as Serializable) // Passa email para a nova Activity
             startActivity(intent)
             finish()
         }
