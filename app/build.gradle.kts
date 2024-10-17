@@ -79,5 +79,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //Servico de envio de email e sms
-    implementation("com.sendgrid:sendgrid-java:4.9.3")
+    implementation("com.google.firebase:firebase-auth:21.1.0")
+
 }
