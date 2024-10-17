@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RelogiodePonto</string>
+    <string name="lista_de_modulos">Lista de Módulos</string>
+    <string name="carga_h_raria">Carga Hóraria</string>
 </resources>
