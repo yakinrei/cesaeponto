@@ -2,6 +2,7 @@ package com.example.relogiodeponto
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +37,35 @@ class MainActivity : AppCompatActivity() {
         // Inicializa o Firebase Database e FirebaseAuth
         database = FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
+
+
+     //   val usersRef = database.getReference("Usuarios")
+//
+//// Ler todos os usuários do Realtime Database
+//        usersRef.get().addOnSuccessListener { dataSnapshot ->
+//            dataSnapshot.children.forEach { snapshot ->
+//                val usuario = snapshot.getValue(Usuario::class.java)
+//                usuario?.let {
+//                    // Para cada usuário, criar uma conta no Firebase Authentication
+//                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(it.email, "senhaPadrao123")
+//                        .addOnCompleteListener { task ->
+//                            if (task.isSuccessful) {
+//                                // Usuário criado com sucesso
+//                                Log.d("Migration", "Usuário ${it.nome} migrado com sucesso!")
+//                            } else {
+//                                // Erro ao criar usuário no Firebase Authentication
+//                                Log.e("Migration", "Erro ao migrar usuário ${it.nome}: ${task.exception?.message}")
+//                            }
+//                        }
+//                }
+//            }
+//        }.addOnFailureListener { e ->
+//            Log.e("Migration", "Erro ao buscar usuários do banco de dados: ${e.message}")
+//        }
+
+
+
+
 
         // Button event listeners
         binding.loginButton.setOnClickListener {
