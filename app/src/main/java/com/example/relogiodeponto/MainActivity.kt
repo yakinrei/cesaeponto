@@ -1,5 +1,6 @@
 package com.example.relogiodeponto
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -184,6 +185,7 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
+                Log.e(TAG, "realizarLogin: ${e.message}")
                 showToast("Erro ao realizar login: ${e.message}")
             }
         }
