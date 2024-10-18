@@ -20,7 +20,7 @@
             android:textColor="#000FFF"
             android:background="@color/white"
             android:gravity="center" />
-m
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="50dp">

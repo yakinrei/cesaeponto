@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ModuloActivity">
+    tools:context=".ProfessorActivity">
 
     <!-- Barra superior com o nome e email do usuário e o botão de logout -->
     <LinearLayout
@@ -45,12 +45,14 @@
         </LinearLayout>
 
         <!-- Botão de Logout -->
-        <ImageButton
+        <ImageView
             android:id="@+id/Logout"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/logout"
             android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
 

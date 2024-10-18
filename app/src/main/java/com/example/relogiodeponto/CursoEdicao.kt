@@ -8,9 +8,8 @@ data class CursoEdicao(
     val edicao: Int = 0,
     val poloId: Int = 0,
     val dataInicio: String = "",
-    val hora: Float = 0.0f,
-    val transporte: Float = 0.0f,
-    val km: Float = 0.0f,
-    val refeicao: Float = 0.0f,
-    val nome: String = ""
+    val pagamentohora: Int = 0,
+    val pagamentotransporte: Int = 0,
+    val pagamentokm: Int = 0,
+    val pagamentorefeicao: Int = 0
 ) : Serializable

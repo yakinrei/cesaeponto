@@ -8,6 +8,8 @@ import aulasAdapter
 import com.example.relogiodeponto.databinding.ActivityProfessorBinding
 import com.google.firebase.database.*
 import modulosAdapter
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ProfessorActivity : AppCompatActivity() {
 
@@ -22,12 +24,12 @@ class ProfessorActivity : AppCompatActivity() {
     private lateinit var materiasRef: DatabaseReference
     private lateinit var cursosEdicaoRef: DatabaseReference
     private lateinit var listaMateriasRef: DatabaseReference
-    private lateinit var polosRef: DatabaseReference
 
     private var materiasList = mutableListOf<Materias>()
     private var cursosEdicaoList = mutableListOf<CursoEdicao>()
     private var listaMateriasList = mutableListOf<ListaMaterias>()
-    private var polosList = mutableListOf<Polos>()
+    private var aulasList = mutableListOf<Aulas>()
+    private var modulosList = mutableListOf<Modulos>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,25 +54,25 @@ class ProfessorActivity : AppCompatActivity() {
         binding.rvModulos.layoutManager = LinearLayoutManager(this)
         binding.rvModulos.adapter = modulosAdapter
 
-        // Configurar o RecyclerView do calendário (aulas)
+        // Configurar o RecyclerView do calendário
         aulasAdapter = aulasAdapter(emptyList())
         binding.rvCalendar.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvCalendar.adapter = aulasAdapter
 
         // Carregar todas as listas do Firebase
+        carregarModulos()
+        carregarAulas()
         carregarMaterias()
         carregarCursosEdicao()
         carregarListaMaterias()
-        carregarPolos()
-        carregarModulos()
     }
 
     private fun carregarMaterias() {
         materiasRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 materiasList.clear()
-                for (materiaSnapshot in snapshot.children) {
-                    val materia = materiaSnapshot.getValue(Materias::class.java)
+                for (dataSnapshot in snapshot.children) {
+                    val materia = dataSnapshot.getValue(Materias::class.java)
                     materia?.let { materiasList.add(it) }
                 }
                 atualizarModulosAdapter()
@@ -86,9 +88,9 @@ class ProfessorActivity : AppCompatActivity() {
         cursosEdicaoRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 cursosEdicaoList.clear()
-                for (cursoSnapshot in snapshot.children) {
-                    val curso = cursoSnapshot.getValue(CursoEdicao::class.java)
-                    curso?.let { cursosEdicaoList.add(it) }
+                for (dataSnapshot in snapshot.children) {
+                    val cursoEdicao = dataSnapshot.getValue(CursoEdicao::class.java)
+                    cursoEdicao?.let { cursosEdicaoList.add(it) }
                 }
                 atualizarModulosAdapter()
             }
@@ -103,26 +105,9 @@ class ProfessorActivity : AppCompatActivity() {
         listaMateriasRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 listaMateriasList.clear()
-                for (listaSnapshot in snapshot.children) {
-                    val lista = listaSnapshot.getValue(ListaMaterias::class.java)
-                    lista?.let { listaMateriasList.add(it) }
-                }
-                atualizarModulosAdapter()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Lidar com erros
-            }
-        })
-    }
-
-    private fun carregarPolos() {
-        polosRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                polosList.clear()
-                for (poloSnapshot in snapshot.children) {
-                    val polo = poloSnapshot.getValue(Polos::class.java)
-                    polo?.let { polosList.add(it) }
+                for (dataSnapshot in snapshot.children) {
+                    val listaMateria = dataSnapshot.getValue(ListaMaterias::class.java)
+                    listaMateria?.let { listaMateriasList.add(it) }
                 }
                 atualizarModulosAdapter()
             }
@@ -143,7 +128,6 @@ class ProfessorActivity : AppCompatActivity() {
                     modulo?.let { modulosList.add(it) }
                 }
                 modulosAdapter.updateModulos(modulosList, materiasList, cursosEdicaoList, listaMateriasList)
-                carregarAulas(modulosList)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -152,19 +136,30 @@ class ProfessorActivity : AppCompatActivity() {
         })
     }
 
-
-    private fun carregarAulas(modulos: List<Modulos>) {
-        val modulosIds = modulos.map { it.id }
+    private fun carregarAulas() {
+        val modulosIds = modulosAdapter.modulos.map { it.id }
         val dataAtual = System.currentTimeMillis()
 
-        aulasRef.orderByChild("data").startAt(dataAtual.toDouble()).addListenerForSingleValueEvent(object :
-            ValueEventListener {
+        aulasRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val aulasList = mutableListOf<Aulas>()
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
                 for (aulaSnapshot in snapshot.children) {
                     val aula = aulaSnapshot.getValue(Aulas::class.java)
                     if (aula != null && modulosIds.contains(aula.moduloId)) {
-                        aulasList.add(aula)
+                        val dataPrevista = aula.diaprevisto // Presumindo que 'diaprevisto' é uma String
+                        try {
+                            val dataPrevistaDate = dateFormat.parse(dataPrevista)
+                            val dataPrevistaTimestamp = dataPrevistaDate?.time ?: 0
+
+                            if (dataPrevistaTimestamp >= dataAtual) {
+                                aulasList.add(aula)
+                            }
+                        } catch (e: Exception) {
+                            // Lidar com erros de conversão de data
+                            e.printStackTrace()
+                        }
                     }
                 }
                 aulasAdapter.updateAulas(aulasList)
@@ -177,7 +172,12 @@ class ProfessorActivity : AppCompatActivity() {
     }
 
     private fun atualizarModulosAdapter() {
-        // Atualiza o adapter dos módulos quando todos os dados necessários forem carregados
         modulosAdapter.updateModulos(modulosAdapter.modulos, materiasList, cursosEdicaoList, listaMateriasList)
     }
+
+    private fun atualizarAulasAdapter() {
+        aulasAdapter.update(aulasAdapter.aulas, aulasList)
+    }
+
 }
+
