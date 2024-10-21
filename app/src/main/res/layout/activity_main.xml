@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,9 +9,9 @@
 
     <LinearLayout
         android:id="@+id/layoutprincipal"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="210dp"
+        android:layout_marginTop="120dp"
         android:gravity="center|center_horizontal|center_vertical"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,11 +19,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/logo"
-            android:src="@drawable/cesae" />
-
+            android:layout_width="wrap_content"
+            android:layout_height="220dp"
+            android:src="@drawable/logotipo" />
 
         <Space
             android:layout_width="match_parent"
@@ -33,7 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/design_default_color_background"
-            android:hint="EMAIL">
+            android:hint="EMAIL"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/usernameInput"
@@ -41,8 +41,9 @@
                 android:layout_height="50dp"
                 android:background="@android:color/transparent"
                 android:inputType="textEmailAddress"
-                android:textAlignment="viewStart" />
-
+                android:textAlignment="viewStart"
+                android:drawableStart="@drawable/baseline_email_24"
+                android:drawablePadding="20dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -58,7 +59,10 @@
                 android:layout_height="50dp"
                 android:background="@android:color/transparent"
                 android:inputType="textPassword"
-                android:textAlignment="viewStart" />
+                android:textAlignment="viewStart"
+                android:drawableStart="@drawable/baseline_password_24"
+                android:drawablePadding="20dp"
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,19 +79,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Entrar"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:layout_marginTop="15dp"
+                android:backgroundTint="#26a5e9"
+                />
             <Button
                 android:id="@+id/forgotPasswordButton"
                 android:layout_width="200sp"
                 android:layout_height="wrap_content"
-
                 android:layout_weight="1"
                 android:text="Esqueci a Senha"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:layout_marginTop="15dp"
+                android:backgroundTint="#26a5e9"/>
 
         </LinearLayout>
     </LinearLayout>
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
