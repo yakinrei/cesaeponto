@@ -2,7 +2,8 @@
 <resources>
 
     <style name="Base.Theme.RelogiodePonto" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowSplashScreenBackground">@android:color/transparent</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@null</item> <!-- Se necessário -->
+        <item name="android:windowSplashScreenBackground">@android:color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/fundobrancosemsentido</item> <!-- Se necessário -->
+
     </style>
 </resources>
