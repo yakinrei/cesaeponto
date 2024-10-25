@@ -176,7 +176,7 @@ class ProfessorActivity : AppCompatActivity() {
     }
 
     private fun atualizarAulasAdapter() {
-        aulasAdapter.update(aulasAdapter.aulas, aulasList)
+        aulasAdapter.update(aulasList)
     }
 
 }

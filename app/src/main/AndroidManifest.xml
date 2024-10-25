@@ -20,7 +20,7 @@
             android:name=".AdministradorActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfessorActivity"
+            android:name=".Professor"
             android:exported="false" />
         <activity
             android:name=".SlashinyoufaceActivity"
