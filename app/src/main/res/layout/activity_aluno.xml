@@ -37,24 +37,16 @@
                 android:textColor="#2ca9ee"/>
 
             <TextView
-                android:id="@+id/profEmail"
+                android:id="@+id/alunoEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:text="email@usuario.com"
-                android:textColor="@color/black"
+                android:textColor="#777"
                 android:layout_gravity="center"/>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/exit"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/exit"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_gravity="center_vertical"/>
+
     </LinearLayout>
 
     <!-- Gráfico centralizado -->
