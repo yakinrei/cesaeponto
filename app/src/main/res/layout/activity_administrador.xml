@@ -46,24 +46,21 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/calendarLayout"
+    <RelativeLayout
+        android:id="@+id/cursos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_centerInParent="true">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCalendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_dia_calendario"
-            tools:layoutManager="LinearLayoutManager"
-            tools:orientation="horizontal" />
-    </LinearLayout>
+            android:layout_centerInParent="true"/>
+<!--            tools:listitem="@layout/item_curso"/>-->
+    </RelativeLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
