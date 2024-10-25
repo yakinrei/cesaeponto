@@ -24,7 +24,6 @@ class SlashinyoufaceActivity : AppCompatActivity() {
         Glide.with(this)
             .load(R.drawable.logo)
             .into(gifImageView)
-
         Handler(Looper.getMainLooper()).postDelayed({
             val i = Intent(this, MainActivity::class.java)
             startActivity(i)
