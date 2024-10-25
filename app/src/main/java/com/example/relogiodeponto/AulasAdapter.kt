@@ -1,3 +1,4 @@
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -5,7 +6,8 @@ import com.example.relogiodeponto.Aulas
 import com.example.relogiodeponto.R
 import com.example.relogiodeponto.databinding.ItemDiaCalendarioBinding
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class aulasAdapter(
     private var aulas: List<Aulas>
@@ -25,6 +27,11 @@ class aulasAdapter(
 
     fun updateAulas(newAulas: List<Aulas>) {
         aulas = newAulas
+        notifyDataSetChanged()
+    }
+
+    fun update(aulasList: MutableList<Aulas>) {
+        aulas = aulasList
         notifyDataSetChanged()
     }
 

@@ -215,6 +215,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun redirecionarPorCargo(user: Usuario) {
         val intent = when (user.cargoId) {
             1 -> Intent(this, AdministradorActivity::class.java)
