@@ -4,8 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.enableEdgeToEdge
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.relogiodeponto.databinding.ActivitySlashinyoufaceBinding
 
 class SlashinyoufaceActivity : AppCompatActivity() {
@@ -14,13 +15,20 @@ class SlashinyoufaceActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         binding = ActivitySlashinyoufaceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Carregar o GIF usando Glide
+        val gifImageView = findViewById<ImageView>(R.id.gifLogo)
+        Glide.with(this)
+            .load(R.drawable.logo)
+            .into(gifImageView)
+
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+            val i = Intent(this, MainActivity::class.java)
+            startActivity(i)
             finish()
-        }, 1000)
+        }, 4000)
    }
 }
